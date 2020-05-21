@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>StackOverflow App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+  <style>
+      span{
+          color: white;
+      }
+      a{
+          color:black;
+      }
+  </style>
+</head>
+  <body>
+    <div class="container my-4">
+      <div class="card" style="width: 100%;">
+        <div class="card-body">
+          <h2 class="card-title">StackOverflow Application</h2>
+          <hr />
+          <h5>
+            Refer
+            <a href="https://api.stackexchange.com/docs/advanced-search"
+              >StackOverflow API Documentation</a
+            >
+            for usage help.
+          </h5>
+          <hr />
+          <form>
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label for="search_q">Q</label>
+                <input type="text" class="form-control" id="search_q" />
+              </div>
+              <div class="form-group col-md-3">
+                <label for="accepted">Accepted</label>
+                <select class="custom-select mr-sm-2" id="accepted">
+                  <option selected></option>
+                  <option value="True">True</option>
+                  <option value="False">False</option>
+                </select>
+              </div>
+              <div class="form-group col-md-3">
+                <label for="answers">Answers</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="answers"
+                  min="0"
+                />
+              </div>
+              <div class="form-group col-md-3">
+                <label for="search_body">Body</label>
+                <input type="text" class="form-control" id="search_body" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label for="closed">Closed</label>
+                <select class="custom-select mr-sm-2" id="closed">
+                  <option selected></option>
+                  <option value="True">True</option>
+                  <option value="False">False</option>
+                </select>
+              </div>
+              <div class="form-group col-md-3">
+                <label for="migrated">Migrated</label>
+                <select class="custom-select mr-sm-2" id="migrated">
+                  <option selected></option>
+                  <option value="True">True</option>
+                  <option value="False">False</option>
+                </select>
+              </div>
+              <div class="form-group col-md-3">
+                <label for="notice">Notice</label>
+                <select class="custom-select mr-sm-2" id="notice">
+                  <option selected></option>
+                  <option value="True">True</option>
+                  <option value="False">False</option>
+                </select>
+              </div>
+              <div class="form-group col-md-3">
+                <label for="not_tagged">Not Tagged (separated by commas)</label>
+                <input type="text" class="form-control" id="not_tagged" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label for="tagged">Tagged</label>
+                <input type="text" class="form-control" id="tagged" />
+              </div>
+              <div class="form-group col-md-3">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title" />
+              </div>
+              <div class="form-group col-md-3">
+                <label for="user_id">User id</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="user_id"
+                  min="0"
+                />
+              </div>
+              <div class="form-group col-md-3">
+                <label for="url">URL</label>
+                <input type="text" class="form-control" id="url" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label for="views">Views</label>
+                <input type="number" class="form-control" id="views" min="0" />
+              </div>
+              <div class="form-group col-md-3">
+                <label for="wiki">Wiki</label>
+                <select class="custom-select mr-sm-2" id="wiki">
+                  <option selected></option>
+                  <option value="True">True</option>
+                  <option value="False">False</option>
+                </select>
+              </div>
+              <div class="form-group col-md-3">
+                <label for="order">Order</label>
+                <select class="custom-select mr-sm-2" id="order">
+                  <option selected></option>
+                  <option value="Desc">Desc</option>
+                  <option value="Asc">Asc</option>
+                </select>
+              </div>
+              <div class="form-group col-md-3">
+                <label for="sort">Sort</label>
+                <select class="custom-select mr-sm-2" id="sort">
+                  <option selected></option>
+                  <option value="Activity">Activity</option>
+                  <option value="Votes">Votes</option>
+                  <option value="Creation">Creation</option>
+                  <option value="Relevance">Relevance</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-auto my-1 mx-auto">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+          <div class="search-result">
+          </div>
+          <nav aria-label="Page navigation">
+          </nav>
+        </div>
+      </div>
+    </div>
+    <script>
+        $("button").click(function(e) {
+            e.preventDefault();
+            var queryParams = {
+                q: $("#search_q").val(),
+                accepted: $("#accepted").val(),
+                answers: $("#answers").val(),
+                body: $("#search_body").val(),
+                closed: $("#closed").val(),
+                migrated: $("#migrated").val(),
+                notice: $("#notice").val(),
+                not_tagged: $("#not_tagged").val(),
+                tagged: $("#tagged").val(),
+                title: $("#title").val(),
+                user_id: $("#user_id").val(),
+                url: $("#url").val(),
+                views: $("#views").val(),
+                wiki: $("#wiki").val(),
+                order: $("#order").val(),
+                sort: $("#sort").val(),
+              }
+              function isEmpty(value){
+                return value == null || value == "";
+              }
+              
+              for(key in queryParams)
+                if(isEmpty(queryParams[key])) 
+                   delete queryParams[key]; 
+              
+            $.ajax({
+                type: "POST",
+                url: "/search_stacky",
+                data: queryParams,
+                success: function(result) {
+                    parsed_data = JSON.parse(JSON.stringify(result));
+                    var container = $('<div />');
+                    for (var i=0; i<parsed_data.data.items.length;i++) {
+                        container.append('<hr><div class="entry card bg-info p-3"><span>Title : '+parsed_data.data.items[i].title+'</span><br><span>Content License : '+parsed_data.data.items[i].content_license+'</span><br><span>Question ID : '+parsed_data.data.items[i].question_id+'</span><br><span>Score : '+parsed_data.data.items[i].score+'</span><br><span>View Count : '+parsed_data.data.items[i].view_count+'</span><br><span>Is Answered : '+parsed_data.data.items[i].is_answered+'</span><br><span>Link : <a href="'+parsed_data.data.items[i].link+'" target="_blank">Visit</a></span><br><span>Answer Count : '+parsed_data.data.items[i].answer_count+'</span><br><span>Tags : '+parsed_data.data.items[i].tags.toString()+'</span><br><span>Owner Reputation : '+parsed_data.data.items[i].owner.reputation+'</span><br><span>Owner User ID : '+parsed_data.data.items[i].owner.user_id+'</span><br><span>Owner User Type : '+parsed_data.data.items[i].owner.user_type+'</span><br><span>Owner Profile Image : '+parsed_data.data.items[i].owner.profile_image+'</span><br><span>Owner Display Name : '+parsed_data.data.items[i].owner.display_name+'</span><br><span>Owner Link : <a href="'+parsed_data.data.items[i].owner.link+'" target="_blank">View</a></span><br><span>Owner Link : '+(Date(eval(parsed_data.data.items[i].owner.creation_date*1000))).toLocaleString()+'</span><br><span>Last Activity : '+(Date(eval(parsed_data.data.items[i].owner.last_activity_date*1000))).toLocaleString()+'</span></div></br>')
+                            ;
+                    }
+                    
+                    $('.search-result').html(container);
+                    var container2 = $('<ul class="pagination" />');
+                    for (var i=1; i<=parsed_data.data.pages;i++){
+                        container2.append('<li class="page-item"><a class="page-link" href="#">'+i+'</a></li>')
+                    }
+                    $('nav').html(container2);
+                },
+                error: function(result) {
+                    if (result.responseJSON.error !== undefined){
+
+                        alert(result.responseJSON.error);
+                    }
+                else
+                {
+                    alert(result.responseJSON.detail);
+                }
+                }
+            });
+        });
+        $(document).on('click', '.page-item',function(e) {
+            e.preventDefault();
+            var queryParams = {
+                q: $("#search_q").val(),
+                accepted: $("#accepted").val(),
+                answers: $("#answers").val(),
+                body: $("#search_body").val(),
+                closed: $("#closed").val(),
+                migrated: $("#migrated").val(),
+                notice: $("#notice").val(),
+                not_tagged: $("#not_tagged").val(),
+                tagged: $("#tagged").val(),
+                title: $("#title").val(),
+                user_id: $("#user_id").val(),
+                url: $("#url").val(),
+                views: $("#views").val(),
+                wiki: $("#wiki").val(),
+                order: $("#order").val(),
+                sort: $("#sort").val(),
+                page_number:$(this).text()
+              }
+              function isEmpty(value){
+                return value == null || value == "";
+              }
+              
+              for(key in queryParams)
+                if(isEmpty(queryParams[key])) 
+                   delete queryParams[key]; 
+            $.ajax({
+                type: "POST",
+                url: "/search_stacky",
+                data: queryParams,
+                success: function(result) {
+                    parsed_data = JSON.parse(JSON.stringify(result));
+                    var container = $('<div />');
+                    for (var i=0; i<parsed_data.data.items.length;i++) {
+                        container.append('<hr><div class="entry card bg-info p-3"><span>Title : '+parsed_data.data.items[i].title+'</span><br><span>Content License : '+parsed_data.data.items[i].content_license+'</span><br><span>Question ID : '+parsed_data.data.items[i].question_id+'</span><br><span>Score : '+parsed_data.data.items[i].score+'</span><br><span>View Count : '+parsed_data.data.items[i].view_count+'</span><br><span>Is Answered : '+parsed_data.data.items[i].is_answered+'</span><br><span>Link : <a href="'+parsed_data.data.items[i].link+'" target="_blank">Visit</a></span><br><span>Answer Count : '+parsed_data.data.items[i].answer_count+'</span><br><span>Tags : '+parsed_data.data.items[i].tags.toString()+'</span><br><span>Owner Reputation : '+parsed_data.data.items[i].owner.reputation+'</span><br><span>Owner User ID : '+parsed_data.data.items[i].owner.user_id+'</span><br><span>Owner User Type : '+parsed_data.data.items[i].owner.user_type+'</span><br><span>Owner Profile Image : '+parsed_data.data.items[i].owner.profile_image+'</span><br><span>Owner Display Name : '+parsed_data.data.items[i].owner.display_name+'</span><br><span>Owner Link : <a href="'+parsed_data.data.items[i].owner.link+'" target="_blank">View</a></span><br><span>Owner Link : '+(Date(eval(parsed_data.data.items[i].owner.creation_date*1000))).toLocaleString()+'</span><br><span>Last Activity : '+(Date(eval(parsed_data.data.items[i].owner.last_activity_date*1000))).toLocaleString()+'</span></div></br>')
+                            ;
+                    }
+                    $('.search-result').html(container);
+                    $('.page-item').removeClass('active');
+                    $(e.target).parent('.page-item').addClass('active');
+                },
+                error: function(result) {
+                    if (result.responseJSON.error !== undefined){
+                        alert(result.responseJSON.error);
+                    }
+                else
+                {
+                    alert(result.responseJSON.detail);
+                }
+                }
+            });
+        });
+    </script>
+  </body>
+</html>

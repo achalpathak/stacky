@@ -1,0 +1,15 @@
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+*.sqlite3
+*.__pycache__
+*.migrations
+*.pyc
+src/db.sqlite3
+db.sqlite3
+.vscode
+.idea
+venv
+settings.json
